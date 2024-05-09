@@ -1,0 +1,24 @@
+
+name: Auto Pull from Original Repo
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+
+      - name: Pull from original repository
+        run: |
+          git config --global user.email "lvyixuan@njust.edu.cn"
+          git config --global user.name "lyu-yx"
+          git pull origin main # Replace 'main' with your default branch if different
