@@ -2,23 +2,29 @@
 name: Auto Pull from Original Repo
 
 on:
-  push:
-    branches: [ "main" ]
-  workflow_dispatch:
-
+  repository_dispatch:
+    types: [sync-fork]
 
 jobs:
-  build:
+  sync:
     runs-on: ubuntu-latest
-
-
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      - name: Checkout the repo
+        uses: actions/checkout@v4
 
-
-      - name: Pull from original repository
+      - name: Setup Git
         run: |
           git config --global user.email "lvyixuan@njust.edu.cn"
           git config --global user.name "lyu-yx"
-          git pull origin main # Replace 'main' with your default branch if different
+
+      - name: Add remote upstream
+        run: git remote add upstream https://github.com/visionxiang/awesome-camouflaged-object-detection.git
+
+      - name: Fetch changes from upstream
+        run: git fetch upstream
+
+      - name: Merge changes from upstream main to your fork's main
+        run: |
+          git checkout main
+          git merge upstream/main
+          git push origin main
